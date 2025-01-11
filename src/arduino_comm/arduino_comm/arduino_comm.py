@@ -4,7 +4,7 @@ from geometry_msgs.msg import Twist
 import serial
 import time
 
-RATE_LIMIT = 0.2  # Minimum time between serial commands in seconds
+RATE_LIMIT = 0.1  # Minimum time between serial commands in seconds
 STOP_THRESHOLD = 0.01  # Threshold to consider the command as a stop
 
 class ArduinoCommNode(Node):
@@ -34,7 +34,7 @@ class ArduinoCommNode(Node):
         linear_speed = msg.linear.x
         angular_speed = msg.angular.z
 
-        max_speed = 200  # Maximum motor speed in steps per second
+        max_speed = 500  # Maximum motor speed in steps per second
         left_motor_speed = int(max_speed * (linear_speed - angular_speed))
         right_motor_speed = int(max_speed * (linear_speed + angular_speed))
 

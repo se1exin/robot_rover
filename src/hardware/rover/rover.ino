@@ -9,11 +9,12 @@
  * E 23, 31
  * F 25, 33
  * G 27, 35
+ * H 
  */
 
 // Pin Definitions for Motors
-// FRONT LEFT - PORT G
-const int MOTOR1_STEP_PIN = 27;
+// FRONT LEFT - PORT E
+const int MOTOR1_STEP_PIN = 23;
 const int MOTOR1_DIR_PIN = 31;
 
 // FRONT RIGHT - PORT A
@@ -21,12 +22,12 @@ const int MOTOR2_STEP_PIN = 28;
 const int MOTOR2_DIR_PIN = 36;
 
 // BACK LEFT - PORT F
-const int MOTOR3_STEP_PIN = 25;
-const int MOTOR3_DIR_PIN = 33;
+const int MOTOR3_STEP_PIN = 27;
+const int MOTOR3_DIR_PIN = 35;
 
-// BACK RIGHT - PORT B
-const int MOTOR4_STEP_PIN = 26;
-const int MOTOR4_DIR_PIN = 34;
+// BACK RIGHT - PORT D
+const int MOTOR4_STEP_PIN = 22;
+const int MOTOR4_DIR_PIN = 30;
 
 // Motor Interface Type
 #define MOTOR_INTERFACE_TYPE AccelStepper::DRIVER
@@ -38,8 +39,8 @@ AccelStepper motor3(MOTOR_INTERFACE_TYPE, MOTOR3_STEP_PIN, MOTOR3_DIR_PIN);
 AccelStepper motor4(MOTOR_INTERFACE_TYPE, MOTOR4_STEP_PIN, MOTOR4_DIR_PIN);
 
 // Speed limits
-const int maxSpeed = 200;       // Maximum speed in steps per second
-const int acceleration = 1000;   // Acceleration in steps per second squared
+const int maxSpeed = 5000;       // Maximum speed in steps per second
+const int acceleration = 4000;   // Acceleration in steps per second squared
 
 // Watchdog timer
 unsigned long lastCommandTime = 0; // Tracks the last time a command was received
