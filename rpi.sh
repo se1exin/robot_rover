@@ -1,3 +1,4 @@
-# Wrapper script to run the arduino node on raspberry pi
+# Wrapper script to run the control node on raspberry pi
 
-ros2 run arduino_comm arduino_comm
+source ./install/setup.bash
+ros2 run rpi_comm rpi_comm
