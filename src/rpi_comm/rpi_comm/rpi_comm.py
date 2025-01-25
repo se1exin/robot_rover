@@ -40,8 +40,8 @@ class StepperMotorNode(Node):
         GPIO.output(self.right_motor_enable_pin, GPIO.HIGH)  # Disable motor initially
 
         # Set up subscriptions
-        self.create_subscription(Float32, 'left_track_speed', self.left_track_callback, 10)
-        self.create_subscription(Float32, 'right_track_speed', self.right_track_callback, 10)
+        self.create_subscription(Float32, 'left_track_delay', self.left_track_callback, 10)
+        self.create_subscription(Float32, 'right_track_delay', self.right_track_callback, 10)
 
         # Initialize motor speeds
         self.left_speed = 0
@@ -94,9 +94,9 @@ class StepperMotorNode(Node):
 
             # Step the motor
             GPIO.output(step_pin, GPIO.HIGH)
-            time.sleep(delay / 2.0)  # Half the delay for HIGH signal
+            time.sleep(speed)  # Half the delay for HIGH signal
             GPIO.output(step_pin, GPIO.LOW)
-            time.sleep(delay / 2.0)  # Half the delay for LOW signal
+            time.sleep(speed)  # Half the delay for LOW signal
 
             self.get_logger().debug(f"{motor_name} stepped (delay = {delay:.4f}s).")
 
