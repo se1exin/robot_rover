@@ -79,18 +79,18 @@ class StepperMotorNode(Node):
             else:
                 # Enable the motor
                 GPIO.output(enable_pin, GPIO.LOW)
-                self.get_logger().info(f"{motor_name} enabled (speed = {speed}).")
+                # self.get_logger().info(f"{motor_name} enabled (speed = {speed}).")
 
             # Set direction
             direction = GPIO.HIGH if speed > 0 else GPIO.LOW
             GPIO.output(dir_pin, direction)
-            if direction == GPIO.HIGH:
-                self.get_logger().debug(f"{motor_name} direction set to FORWARD.")
-            else:
-                self.get_logger().debug(f"{motor_name} direction set to REVERSE.")
+            # if direction == GPIO.HIGH:
+            #     self.get_logger().debug(f"{motor_name} direction set to FORWARD.")
+            # else:
+            #     self.get_logger().debug(f"{motor_name} direction set to REVERSE.")
 
             # Calculate delay between steps (speed control)
-            delay = 1.0 / max(abs(speed), 1)  # Prevent division by zero
+            delay = max(abs(speed), 1) /  100000  # Prevent division by zero
 
             # Step the motor
             GPIO.output(step_pin, GPIO.HIGH)
@@ -98,7 +98,7 @@ class StepperMotorNode(Node):
             GPIO.output(step_pin, GPIO.LOW)
             time.sleep(delay)  # Half the delay for LOW signal
 
-            self.get_logger().debug(f"{motor_name} stepped (delay = {delay:.4f}s).")
+            # self.get_logger().debug(f"{motor_name} stepped (delay = {delay:.4f}s).")
 
     def destroy_node(self):
         # Clean up GPIO pins on shutdown
