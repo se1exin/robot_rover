@@ -94,9 +94,9 @@ class StepperMotorNode(Node):
 
             # Step the motor
             GPIO.output(step_pin, GPIO.HIGH)
-            time.sleep(speed)  # Half the delay for HIGH signal
+            time.sleep(delay)  # Half the delay for HIGH signal
             GPIO.output(step_pin, GPIO.LOW)
-            time.sleep(speed)  # Half the delay for LOW signal
+            time.sleep(delay)  # Half the delay for LOW signal
 
             self.get_logger().debug(f"{motor_name} stepped (delay = {delay:.4f}s).")
 
