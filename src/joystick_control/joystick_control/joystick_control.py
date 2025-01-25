@@ -43,9 +43,6 @@ class XboxControl(Node):
         if abs(right_track_speed) < DEAD_ZONE:
             right_track_speed = 0.0
 
-        
-        self.get_logger().info(f"left: {left_delay}, right: {right_delay}")
-
         if self.last_left != left_track_speed:
             self.last_left = left_track_speed
             # Joy values are between 0.0 and 1.0
@@ -58,8 +55,9 @@ class XboxControl(Node):
             right_delay = self.map_to_delay(right_track_speed)
             self.right_track_pub.publish(Float32(data=right_delay))
         
+        self.get_logger().info(f"left: {self.last_left}, right: {self.last_right}")
 
-    def map_to_delay(self, speed_factor, min_delay=100, max_delay=300):
+    def map_to_delay(self, speed_factor, min_delay=40, max_delay=150):
         """
         Maps a speed factor between -1.0 and 1.0 to a delay for a stepper motor.
         

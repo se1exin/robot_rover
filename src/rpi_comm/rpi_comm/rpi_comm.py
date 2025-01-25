@@ -90,7 +90,7 @@ class StepperMotorNode(Node):
             #     self.get_logger().debug(f"{motor_name} direction set to REVERSE.")
 
             # Calculate delay between steps (speed control)
-            delay = max(abs(speed), 1) /  100000  # Prevent division by zero
+            delay = max(abs(speed), 1) / 100000  # Prevent division by zero
 
             # Step the motor
             GPIO.output(step_pin, GPIO.HIGH)
