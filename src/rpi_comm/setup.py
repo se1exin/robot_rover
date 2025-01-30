@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'rpi_comm = rpi_comm.rpi_comm:main'
+            'rpi_comm = rpi_comm.rpi_comm:main',
+            'camera_stream = rpi_comm.camera_stream:main'
         ],
     },
 )
