@@ -5,13 +5,12 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /app
 
 RUN apt update && apt install -y \
-    python3-gpiozero \
+    libgpiod-dev gpiod python3-libgpiod \
     ros-${ROS_DISTRO}-librealsense2* ros-${ROS_DISTRO}-realsense2-*
 
-COPY . ros2_ws/
-RUN cd ros2_ws && \
-    source /opt/ros/jazzy/setup.bash && \
-    colcon build
+COPY src /app/src
+
+RUN colcon build
 
 COPY ./docker_entrypoint.sh /
 

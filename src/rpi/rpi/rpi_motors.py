@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
-import RPi.GPIO as GPIO
+import gpiod
 import threading
 import time
 
@@ -26,18 +26,24 @@ class StepperMotorNode(Node):
         self.right_motor_dir_pin = self.get_parameter('right_motor_dir_pin').value
         self.right_motor_enable_pin = self.get_parameter('right_motor_enable_pin').value
 
-        # Initialize GPIO pins
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.left_motor_step_pin, GPIO.OUT)
-        GPIO.setup(self.left_motor_dir_pin, GPIO.OUT)
-        GPIO.setup(self.left_motor_enable_pin, GPIO.OUT)
-        GPIO.setup(self.right_motor_step_pin, GPIO.OUT)
-        GPIO.setup(self.right_motor_dir_pin, GPIO.OUT)
-        GPIO.setup(self.right_motor_enable_pin, GPIO.OUT)
+        # Initialize gpiod chips and lines
+        self.chip = gpiod.Chip('gpiochip0')  # Default GPIO chip
+        self.lines = {
+            self.left_motor_step_pin: self.chip.get_line(self.left_motor_step_pin),
+            self.left_motor_dir_pin: self.chip.get_line(self.left_motor_dir_pin),
+            self.left_motor_enable_pin: self.chip.get_line(self.left_motor_enable_pin),
+            self.right_motor_step_pin: self.chip.get_line(self.right_motor_step_pin),
+            self.right_motor_dir_pin: self.chip.get_line(self.right_motor_dir_pin),
+            self.right_motor_enable_pin: self.chip.get_line(self.right_motor_enable_pin),
+        }
+
+        # Configure GPIO lines as outputs
+        for pin, line in self.lines.items():
+            line.request(consumer="StepperMotorNode", type=gpiod.LINE_REQ_DIR_OUT)
 
         # Enable both motors by default
-        GPIO.output(self.left_motor_enable_pin, GPIO.HIGH)  # Disable motor initially
-        GPIO.output(self.right_motor_enable_pin, GPIO.HIGH)  # Disable motor initially
+        self.lines[self.left_motor_enable_pin].set_value(1)  # Disable motor initially
+        self.lines[self.right_motor_enable_pin].set_value(1)  # Disable motor initially
 
         # Set up subscriptions
         self.create_subscription(Float32, 'left_track_delay', self.left_track_callback, 10)
@@ -48,8 +54,10 @@ class StepperMotorNode(Node):
         self.right_speed = 0
 
         # Create threads for motor control
-        self.left_motor_thread = threading.Thread(target=self.run_motor, args=(self.left_motor_step_pin, self.left_motor_dir_pin, self.left_motor_enable_pin, lambda: self.left_speed, "Left Motor"))
-        self.right_motor_thread = threading.Thread(target=self.run_motor, args=(self.right_motor_step_pin, self.right_motor_dir_pin, self.right_motor_enable_pin, lambda: self.right_speed, "Right Motor"))
+        self.left_motor_thread = threading.Thread(target=self.run_motor, args=(
+            self.left_motor_step_pin, self.left_motor_dir_pin, self.left_motor_enable_pin, lambda: self.left_speed, "Left Motor"))
+        self.right_motor_thread = threading.Thread(target=self.run_motor, args=(
+            self.right_motor_step_pin, self.right_motor_dir_pin, self.right_motor_enable_pin, lambda: self.right_speed, "Right Motor"))
 
         self.left_motor_thread.daemon = True
         self.right_motor_thread.daemon = True
@@ -72,19 +80,19 @@ class StepperMotorNode(Node):
             speed = speed_getter()
             if speed == 0:
                 # Disable the motor if speed is 0
-                GPIO.output(enable_pin, GPIO.HIGH)
+                self.lines[enable_pin].set_value(1)
                 self.get_logger().info(f"{motor_name} disabled (speed = 0).")
                 time.sleep(0.1)  # Sleep briefly to prevent CPU overload
                 continue
             else:
                 # Enable the motor
-                GPIO.output(enable_pin, GPIO.LOW)
+                self.lines[enable_pin].set_value(0)
                 # self.get_logger().info(f"{motor_name} enabled (speed = {speed}).")
 
             # Set direction
-            direction = GPIO.HIGH if speed > 0 else GPIO.LOW
-            GPIO.output(dir_pin, direction)
-            # if direction == GPIO.HIGH:
+            direction = 1 if speed > 0 else 0
+            self.lines[dir_pin].set_value(direction)
+            # if direction == 1:
             #     self.get_logger().debug(f"{motor_name} direction set to FORWARD.")
             # else:
             #     self.get_logger().debug(f"{motor_name} direction set to REVERSE.")
@@ -93,17 +101,18 @@ class StepperMotorNode(Node):
             delay = max(abs(speed), 1) / 100000  # Prevent division by zero
 
             # Step the motor
-            GPIO.output(step_pin, GPIO.HIGH)
+            self.lines[step_pin].set_value(1)
             time.sleep(delay)  # Half the delay for HIGH signal
-            GPIO.output(step_pin, GPIO.LOW)
+            self.lines[step_pin].set_value(0)
             time.sleep(delay)  # Half the delay for LOW signal
 
             # self.get_logger().debug(f"{motor_name} stepped (delay = {delay:.4f}s).")
 
     def destroy_node(self):
-        # Clean up GPIO pins on shutdown
-        GPIO.cleanup()
-        self.get_logger().info("GPIO cleaned up.")
+        # Release GPIO lines on shutdown
+        for line in self.lines.values():
+            line.release()
+        self.get_logger().info("GPIO lines released.")
         super().destroy_node()
 
 

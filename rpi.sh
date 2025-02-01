@@ -2,4 +2,4 @@
 
 source ./install/setup.bash
 
-ros2 run rpi_comm rpi_comm
+ros2 run rpi rpi

@@ -1,6 +1,7 @@
 from setuptools import find_packages, setup
+from glob import glob
 
-package_name = 'rpi_comm'
+package_name = 'rpi'
 
 setup(
     name=package_name,
@@ -10,6 +11,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name + '/launch', glob('launch/*.launch.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -20,8 +22,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'rpi_comm = rpi_comm.rpi_comm:main',
-            'camera_stream = rpi_comm.camera_stream:main'
+            'rpi_motors = rpi.rpi_motors:main'
         ],
     },
 )
