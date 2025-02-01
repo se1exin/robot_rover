@@ -21,16 +21,4 @@ def generate_launch_description():
             name='joystick_control',
             output='screen'
         ),
-
-        # Start the Arduino communication node
-        Node(
-            package='arduino_comm',
-            executable='arduino_comm',
-            name='arduino_comm',
-            output='screen',
-            parameters=[{
-                'serial_port': '/dev/ttyACM0',
-                'baud_rate': 115200
-            }]
-        ),
     ])

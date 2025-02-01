@@ -2,8 +2,8 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>joystick_control</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <version>0.0.1</version>
+  <description>Robot Tank Xbox Controller Node</description>
   <maintainer email="selexin@selexin.com">selexin</maintainer>
   <license>TODO: License declaration</license>
 
@@ -11,6 +11,8 @@
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
+
+  <exec_depend>joy</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>
