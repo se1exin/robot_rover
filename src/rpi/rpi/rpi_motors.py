@@ -81,7 +81,7 @@ class StepperMotorNode(Node):
             if speed == 0:
                 # Disable the motor if speed is 0
                 self.lines[enable_pin].set_value(1)
-                self.get_logger().info(f"{motor_name} disabled (speed = 0).")
+                # self.get_logger().info(f"{motor_name} disabled (speed = 0).")
                 time.sleep(0.1)  # Sleep briefly to prevent CPU overload
                 continue
             else:
@@ -92,10 +92,6 @@ class StepperMotorNode(Node):
             # Set direction
             direction = 1 if speed > 0 else 0
             self.lines[dir_pin].set_value(direction)
-            # if direction == 1:
-            #     self.get_logger().debug(f"{motor_name} direction set to FORWARD.")
-            # else:
-            #     self.get_logger().debug(f"{motor_name} direction set to REVERSE.")
 
             # Calculate delay between steps (speed control)
             delay = max(abs(speed), 1) / 100000  # Prevent division by zero
