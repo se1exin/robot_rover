@@ -1,33 +1,70 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
+import os
 
 def generate_launch_description():
-    return LaunchDescription([
-        # Start the stepper driver node
-        # Node(
-        #     package='rpi',
-        #     executable='rpi_motors',
-        #     name='rpi_motors',
-        #     output='screen'
-        # ),
+    motor_node = Node(
+        package='rpi',
+        executable='rpi_motors',
+        name='rpi_motors',
+        output='screen'
+    )
 
-        # Start the realsense cam node
-        Node(
-            package='realsense2_camera',
-            executable='realsense2_camera_node',
-            name='realsense2_camera_node',
-            output='screen',
-            parameters=[
-                {
-                    'enable_color': True,             # Enable color stream
-                    'color_width': 640,              # Set color stream width
-                    'color_height': 480,             # Set color stream height
-                    'color_fps': 15,                 # Frames per second for color stream
-                    'enable_depth': True,            # Enable depth stream
-                    'depth_width': 640,              # Set depth stream width
-                    'depth_height': 480,             # Set depth stream height
-                    'depth_fps': 15,                 # Frames per second for depth stream
-                }
-            ]
-        ),
+    webcam_1_node = Node(
+        package='v4l2_camera',
+        executable='v4l2_camera_node',
+        name='webcam_1',
+        output='screen',
+        namespace='webcam_1',
+        parameters=[
+            {
+                "video_device": os.environ.get("WEBCAM_1", ""),
+                "image_size": [1280,720],
+            },
+        ]
+    )
+
+    webcam_2_node = Node(
+        package='v4l2_camera',
+        executable='v4l2_camera_node',
+        name='webcam_2',
+        output='screen',
+        namespace='webcam_2',
+        parameters=[
+            {
+                "video_device": os.environ.get("WEBCAM_2", ""),
+                "image_size": [1280,720],
+            },
+        ]
+    )
+
+    realsense_node = Node(
+        package='realsense2_camera',
+        executable='realsense2_camera_node',
+        name='realsense2_camera_node',
+        output='screen',
+        parameters=[
+            {
+                "initial_reset": True,
+                "enable_rgbd": True,
+                "enable_sync": True,
+                "enable_infra1": False,
+                "enable_infra2": False,
+                "align_depth.enable": True,
+                "enable_color": True,
+                "enable_depth": True,
+                "rgb_camera.color_profile": "320x180x6",
+                "depth_module.depth_profile": "480x270x6",
+                # "depth_module.infra_profile": "640x480x15",
+                "publish_tf": False,
+            }
+        ]
+    )
+
+
+    return LaunchDescription([
+        webcam_1_node,
+        webcam_2_node,
+        motor_node,
+        # realsense_node,
     ])
