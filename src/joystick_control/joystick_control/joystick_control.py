@@ -61,19 +61,23 @@ class XboxControl(Node):
         left_track_speed *= self.speed_multiplier
         right_track_speed *= self.speed_multiplier
 
+        did_change = False
         # Publish left track speed if it has changed
         if self.last_left != left_track_speed:
             self.last_left = left_track_speed
             left_delay = self.map_to_delay(left_track_speed)
             self.left_track_pub.publish(Float32(data=left_delay))
+            did_change = True
 
         # Publish right track speed if it has changed
         if self.last_right != right_track_speed:
             self.last_right = right_track_speed
             right_delay = self.map_to_delay(right_track_speed)
             self.right_track_pub.publish(Float32(data=right_delay))
+            did_change = True
         
-        self.get_logger().info(f"left: {self.last_left}, right: {self.last_right}")
+        if did_change:
+            self.get_logger().info(f"left: {self.last_left}, right: {self.last_right}")
 
     def map_to_delay(self, speed_factor, min_delay=50, max_delay=100):
         """
