@@ -8,12 +8,9 @@ RUN apt-get update && apt-get install -y \
     ros-${ROS_DISTRO}-rqt-image-view
     # rm -rf /var/lib/apt/lists/*
 
-COPY . ros2_ws/
-RUN cd ros2_ws && \
-    rosdep update && \
-    rosdep install --from-paths src -y --ignore-src && \
-    source /opt/ros/${ROS_DISTRO}/setup.bash && \
-    colcon build
+COPY . /app
+RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
+    colcon build --symlink-install
 
 COPY ./docker_entrypoint.sh /
 
