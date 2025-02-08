@@ -6,7 +6,6 @@ WORKDIR /app
 
 RUN apt update && apt install -y \
     libgpiod-dev gpiod python3-libgpiod \
-    ros-${ROS_DISTRO}-librealsense2* ros-${ROS_DISTRO}-realsense2-* \
     v4l-utils ros-${ROS_DISTRO}-v4l2-camera ros-${ROS_DISTRO}-image-transport-plugins
 
 COPY . /app/
