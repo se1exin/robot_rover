@@ -20,36 +20,45 @@ def generate_launch_description():
         output='screen'
     )
 
-    # First rqt_image_view instance (for webcam_1)
-    rqt_image_view_1 = Node(
+    rqt_image_cam_1 = Node(
         package='rqt_image_view',
         executable='rqt_image_view',
-        name='rqt_image_view_1',
+        name='rqt_image_cam_1',
+        arguments=['/cam_1/image_raw/compressed'],
+        output='screen'
+    )
+
+    rqt_image_cam_2 = Node(
+        package='rqt_image_view',
+        executable='rqt_image_view',
+        name='rqt_image_cam_2',
+        arguments=['/cam_2/image_raw/compressed'],
+        output='screen'
+    )
+
+    rqt_image_webcam_1 = Node(
+        package='rqt_image_view',
+        executable='rqt_image_view',
+        name='rqt_image_webcam_1',
         arguments=['/webcam_1/image_raw/compressed'],
         output='screen'
     )
 
-    # Second rqt_image_view instance (for webcam_2)
-    rqt_image_view_2 = Node(
+    rqt_image_webcam_2 = Node(
         package='rqt_image_view',
         executable='rqt_image_view',
-        name='rqt_image_view_2',
+        name='rqt_image_webcam_2',
         arguments=['/webcam_2/image_raw/compressed'],
         output='screen'
     )
 
-    rqt_image_view_3 = Node(
-        package='rqt_image_view',
-        executable='rqt_image_view',
-        name='rqt_image_view_3',
-        arguments=['/camera/realsense2_camera_node/depth/image_rect_raw/compressed'],
-        output='screen'
-    )
+    
 
     return LaunchDescription([
         joy_node,
         xbox_controller_node,
-        rqt_image_view_1,
-        rqt_image_view_2,
-        # rqt_image_view_3,
+        rqt_image_cam_1,
+        rqt_image_cam_2,
+        # rqt_image_webcam_1,
+        # rqt_image_webcam_2,
     ])

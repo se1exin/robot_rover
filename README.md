@@ -8,6 +8,8 @@ Run `./scripts/server.docker-build.sh` to build the image.
 
 Run `./scripts/server.docker-run.sh` to run the joystick controller node.
 
+Instructions for getting xbox one controller working over bluetooth. Note disabling ERTM was not required on Ubuntu 22.04: https://www.addictivetips.com/ubuntu-linux-tips/xbox-one-controllers-over-bluetooth-linux/
+
 
 ## Raspberry Pi 5 - Ubuntu 24.04
 
