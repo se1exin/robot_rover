@@ -4,9 +4,9 @@
 
 Install docker
 
-Run `./docker-build.server.sh` to build the image.
+Run `./scripts/server.docker-build.sh` to build the image.
 
-Run `./docker-run.server.sh` to run the joystick controller node.
+Run `./scripts/server.docker-run.sh` to run the joystick controller node.
 
 
 ## Raspberry Pi 5 - Ubuntu 24.04
@@ -36,9 +36,9 @@ ros2 launch rpi rpi.launch.py
 ### Docker Usage 
 Install docker and clone the repo onto a raspberry pi,
 
-Run `./docker-build.rpi.sh` to build the image.
+Run `./scripts/docker-build.sh` to build the image.
 
-Run `./docker-run.rpi.sh` to run the motor controller node.
+Run `./scripts/rpi.docker-run.sh` to run the motor controller node.
 
 
 ## Pin Mappings

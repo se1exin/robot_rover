@@ -1,1 +1,0 @@
-docker build -t robot-tank-rpi -f Dockerfile.rpi .

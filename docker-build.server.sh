@@ -1,1 +1,0 @@
-docker build -t robot-tank-server -f Dockerfile.server .

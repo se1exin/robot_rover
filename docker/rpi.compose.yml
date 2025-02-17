@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  motors:
+    container_name: robot-tank-rpi-motors
+    image: robot-tank-rpi
+    privileged: true
+    network_mode: "host"
+    environment:
+      - ROS_STATIC_PEERS=10.1.1.6
+    devices:
+      - /dev/gpiochip1
+    volumes:
+      - /sys/class/gpio:/sys/class/gpio
+      - /dev:/dev
+      - /run/udev/:/run/udev/
+    restart: unless-stopped
+    command: ros2 launch rpi rpi.motors.launch.py
+
+  cam1:
+    container_name: robot-tank-rpi-cam-1
+    image: robot-tank-rpi
+    privileged: true
+    network_mode: "host"
+    environment:
+      - ROS_STATIC_PEERS=10.1.1.6
+    volumes:
+      - /dev:/dev
+      - /run/udev/:/run/udev/
+    group_add:
+      - video
+    restart: unless-stopped
+    command: ros2 launch rpi rpi.cam1.launch.py
+
+  cam2:
+    container_name: robot-tank-rpi-cam-2
+    image: robot-tank-rpi
+    privileged: true
+    network_mode: "host"
+    environment:
+      - ROS_STATIC_PEERS=10.1.1.6
+    volumes:
+      - /dev:/dev
+      - /run/udev/:/run/udev/
+    group_add:
+      - video
+    restart: unless-stopped
+    command: ros2 launch rpi rpi.cam2.launch.py
+
+  # Webcams are performing very poorly. Using rpi cams instead.
+  # webcam1:
+  #   container_name: robot-tank-rpi-webcam-1
+  #   image: robot-tank-rpi
+  #   privileged: true
+  #   network_mode: "host"
+  #   environment:
+  #     - WEBCAM_1
+  #     - ROS_STATIC_PEERS=10.1.1.6
+  #   volumes:
+  #     - /dev:/dev
+  #     - /run/udev/:/run/udev/
+  #   group_add:
+  #     - video
+  #   restart: unless-stopped
+  #   command: ros2 launch rpi rpi.webcam1.launch.py
+
+  # webcam2:
+  #   container_name: robot-tank-rpi-webcam-2
+  #   image: robot-tank-rpi
+  #   privileged: true
+  #   network_mode: "host"
+  #   environment:
+  #     - WEBCAM_2
+  #     - ROS_STATIC_PEERS=10.1.1.6
+  #   volumes:
+  #     - /dev:/dev
+  #     - /run/udev/:/run/udev/
+  #   group_add:
+  #     - video
+  #   restart: unless-stopped
+  #   command: ros2 launch rpi rpi.webcam2.launch.py

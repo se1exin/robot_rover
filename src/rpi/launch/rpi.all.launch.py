@@ -20,6 +20,7 @@ def generate_launch_description():
             {
                 "video_device": os.environ.get("WEBCAM_1", ""),
                 "image_size": [1280,720],
+                # "output_encoding": "yuv422_yuy2"
             },
         ]
     )
@@ -36,6 +37,13 @@ def generate_launch_description():
                 "image_size": [1280,720],
             },
         ]
+    )
+
+    rpi_cam_node = Node(
+        package='camera_ros',
+        executable='camera_node',
+        name='camera_node',
+        output='screen',
     )
 
     realsense_node = Node(
@@ -63,8 +71,9 @@ def generate_launch_description():
 
 
     return LaunchDescription([
-        webcam_1_node,
-        webcam_2_node,
+        # webcam_1_node,
+        # webcam_2_node,
+        rpi_cam_node,
         motor_node,
         # realsense_node,
     ])
