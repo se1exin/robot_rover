@@ -27,6 +27,14 @@ sudo apt update && sudo apt install libgpiod-dev gpiod python3-libgpiod
 
 You also might need to update some udev rules to allow your user access to gpio. See https://github.com/warthog618/go-gpiocdev/issues/10#issuecomment-1563028537
 
+### Enable Serial
+
+Edit /boot/firmware/config.txt and add the following lines:
+
+```
+enable_uart=1
+dtoverlay=disable-bt
+```
 
 ## Run the ros2 node
 

@@ -22,7 +22,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'rpi_motors = rpi.rpi_motors:main'
+            'rpi_motors = rpi.rpi_motors:main',
+            'fm1828_publisher = rpi.fm1828_publisher:main'
         ],
     },
 )

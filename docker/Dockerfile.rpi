@@ -5,7 +5,7 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /app
 
 RUN apt update && apt install -y \
-    libgpiod-dev gpiod python3-libgpiod \
+    libgpiod-dev gpiod python3-libgpiod python3-serial \
     v4l-utils ros-${ROS_DISTRO}-v4l2-camera ros-${ROS_DISTRO}-image-transport-plugins \
     ros-${ROS_DISTRO}-image-pipeline \
     git python3-pip git python3-jinja2 \
