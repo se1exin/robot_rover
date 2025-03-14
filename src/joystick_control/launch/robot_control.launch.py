@@ -57,8 +57,8 @@ def generate_launch_description():
     return LaunchDescription([
         joy_node,
         xbox_controller_node,
-        rqt_image_cam_1,
-        rqt_image_cam_2,
+        # rqt_image_cam_1,
+        # rqt_image_cam_2,
         # rqt_image_webcam_1,
         # rqt_image_webcam_2,
     ])
