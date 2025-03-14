@@ -15,21 +15,21 @@ services:
     restart: unless-stopped
     command: ros2 launch rpi rpi.motors.launch.py
   
-  lidar:
-    container_name: robot-tank-rpi-lidar
-    image: robot-tank-rpi
-    privileged: true
-    network_mode: "host"
-    environment:
-      - ROS_STATIC_PEERS=10.1.1.6
-    devices:
-      - /dev/serial0
-    volumes:
-      - /sys/class/gpio:/sys/class/gpio
-      - /dev:/dev
-      - /run/udev/:/run/udev/
-    restart: unless-stopped
-    command: ros2 launch rpi rpi.lidar.launch.py
+  # lidar:
+  #   container_name: robot-tank-rpi-lidar
+  #   image: robot-tank-rpi
+  #   privileged: true
+  #   network_mode: "host"
+  #   environment:
+  #     - ROS_STATIC_PEERS=10.1.1.6
+  #   devices:
+  #     - /dev/serial0
+  #   volumes:
+  #     - /sys/class/gpio:/sys/class/gpio
+  #     - /dev:/dev
+  #     - /run/udev/:/run/udev/
+  #   restart: unless-stopped
+  #   command: ros2 launch rpi rpi.lidar.launch.py
 
   cam1:
     container_name: robot-tank-rpi-cam-1
@@ -60,3 +60,35 @@ services:
       - video
     restart: unless-stopped
     command: ros2 launch rpi rpi.cam2.launch.py
+
+  cam1_servo:
+    container_name: robot-tank-rpi-cam1-servo
+    image: robot-tank-rpi
+    privileged: true
+    network_mode: "host"
+    environment:
+      - ROS_STATIC_PEERS=10.1.1.6
+    devices:
+      - /dev/gpiochip0
+    volumes:
+      - /sys/class/gpio:/sys/class/gpio
+      - /dev:/dev
+      - /run/udev/:/run/udev/
+    restart: unless-stopped
+    command: ros2 launch rpi rpi.cam1_servo.launch.py
+
+  cam2_servo:
+    container_name: robot-tank-rpi-cam2-servo
+    image: robot-tank-rpi
+    privileged: true
+    network_mode: "host"
+    environment:
+      - ROS_STATIC_PEERS=10.1.1.6
+    devices:
+      - /dev/gpiochip0
+    volumes:
+      - /sys/class/gpio:/sys/class/gpio
+      - /dev:/dev
+      - /run/udev/:/run/udev/
+    restart: unless-stopped
+    command: ros2 launch rpi rpi.cam2_servo.launch.py
