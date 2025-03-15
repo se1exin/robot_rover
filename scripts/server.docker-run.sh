@@ -13,6 +13,10 @@ docker run -it \
   --env="DISPLAY=$DISPLAY" \
   --env="QT_X11_NO_MITSHM=1" \
   --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
+  -v $(pwd)/src:/app/src \
   --name="robot-tank-server" \
+  --gpus=all \
   robot-tank-server \
-  ros2 launch joystick_control robot_control.launch.py
+  bash
+  #ros2 launch joystick_control robot_control.launch.py
+  #ros2 launch joystick_control gazebo.launch.py

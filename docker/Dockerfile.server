@@ -5,14 +5,20 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
-    ros-${ROS_DISTRO}-rqt-image-view
+    ros-${ROS_DISTRO}-rqt-image-view \
+    ros-${ROS_DISTRO}-ros-gz \
+    ros-${ROS_DISTRO}-gz-ros2-control \
+    ros-${ROS_DISTRO}-ros2-control \
+    ros-${ROS_DISTRO}-ros2-controllers \
+    ros-${ROS_DISTRO}-joint-state-publisher \
+    ros-${ROS_DISTRO}-xacro
     # rm -rf /var/lib/apt/lists/*
 
 COPY . /app
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
     colcon build --symlink-install
 
-COPY ./docker_entrypoint.sh /
+COPY ./scripts/docker_entrypoint.sh /app/docker_entrypoint.sh
 
-ENTRYPOINT ["/docker_entrypoint.sh"]
+ENTRYPOINT ["/app/docker_entrypoint.sh"]
 CMD ["bash"]
