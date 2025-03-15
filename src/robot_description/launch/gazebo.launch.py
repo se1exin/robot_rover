@@ -30,22 +30,39 @@ def generate_launch_description():
         'use_sim_time': True}] # add other parameters here if required
     )
 
-
-
+    world = os.path.join(get_package_share_directory(pkg_name), 'worlds', 'basic.sdf')
+    
     gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')])
-        )
+        PythonLaunchDescriptionSource([
+            os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
+        ]),
+        launch_arguments={'gz_args': ['-r -v4 ', world], 'on_exit_shutdown': 'true'}.items()
+    )
 
 
     spawn_entity = Node(package='ros_gz_sim', executable='create',
                     arguments=['-topic', 'robot_description',
-                                '-name', 'robot'],
+                                '-name', 'robot',
+                                '-z', '0.1'],
                     output='screen')
+    
+
+    bridge_params = os.path.join(get_package_share_directory(pkg_name), 'config', 'gz_bridge.yaml')
+    node_gz_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '--ros-args',
+            '-p',
+            f'config_file:={bridge_params}',
+        ],
+        output='screen',
+    )
 
     # Run the node
     return LaunchDescription([
         gazebo,
+        node_gz_bridge,
         node_robot_state_publisher,
         spawn_entity
     ])
