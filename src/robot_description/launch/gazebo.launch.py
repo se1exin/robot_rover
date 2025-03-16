@@ -59,12 +59,30 @@ def generate_launch_description():
         output='screen',
     )
 
+    joy_params = os.path.join(get_package_share_directory(pkg_name),'config','joystick.yaml')
+
+    joy_node = Node(
+        package='joy',
+        executable='joy_node',
+        parameters=[joy_params],
+    )
+    
+    teleop_node = Node(
+        package='teleop_twist_joy', 
+        executable='teleop_node',
+        name = 'teleop_node',
+        parameters=[joy_params],
+        # remappings=[('/cmd_vel', '/diff_cont/cmd_vel_unstamped')]
+    )
+
     # Run the node
     return LaunchDescription([
         gazebo,
         node_gz_bridge,
         node_robot_state_publisher,
-        spawn_entity
+        spawn_entity,
+        joy_node,
+        teleop_node
     ])
 
 
