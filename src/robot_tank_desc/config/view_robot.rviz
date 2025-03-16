@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /TF1
+        - /TF1/Frames1
         - /RobotModel1
         - /LaserScan1
       Splitter Ratio: 0.5
@@ -55,17 +57,33 @@ Visualization Manager:
       Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
-        All Enabled: true
+        All Enabled: false
+        back_left_bottom_wheel:
+          Value: false
+        back_left_top_wheel:
+          Value: false
         back_left_wheel:
           Value: true
+        back_right_top_wheel:
+          Value: false
         back_right_wheel:
           Value: true
         base_link:
           Value: true
+        bottom_left_top_wheel:
+          Value: false
         chassis:
           Value: true
+        front_left_bottom_wheel:
+          Value: false
+        front_left_top_wheel:
+          Value: false
         front_left_wheel:
           Value: true
+        front_right_bottom_wheel:
+          Value: false
+        front_right_top_wheel:
+          Value: false
         front_right_wheel:
           Value: true
         laser_frame:
@@ -84,14 +102,30 @@ Visualization Manager:
       Tree:
         odom:
           base_link:
+            back_left_bottom_wheel:
+              {}
+            back_left_top_wheel:
+              {}
             back_left_wheel:
               {}
+            back_right_top_wheel:
+              {}
             back_right_wheel:
+              {}
+            bottom_left_top_wheel:
               {}
             chassis:
               laser_frame:
                 {}
+            front_left_bottom_wheel:
+              {}
+            front_left_top_wheel:
+              {}
             front_left_wheel:
+              {}
+            front_right_bottom_wheel:
+              {}
+            front_right_top_wheel:
               {}
             front_right_wheel:
               {}
@@ -119,7 +153,17 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        back_left_wheel:
+        back_left_bottom_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        back_left_top_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        back_right_top_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -138,12 +182,22 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        front_left_wheel:
+        front_left_bottom_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        front_right_wheel:
+        front_left_top_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_bottom_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_top_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -186,9 +240,9 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: -999999
+      Max Intensity: 0
       Min Color: 0; 0; 0
-      Min Intensity: 999999
+      Min Intensity: 0
       Name: LaserScan
       Position Transformer: XYZ
       Selectable: true
@@ -208,7 +262,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odom
+    Fixed Frame: base_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -251,25 +305,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 3.846923589706421
+      Distance: 0.763214111328125
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.330626517534256
-        Y: 0.7286407947540283
-        Z: 0.6063950061798096
-      Focal Shape Fixed Size: true
+        X: -0.00010546659177634865
+        Y: 0.0035634038504213095
+        Z: 5.4895877838134766e-05
+      Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3853977620601654
+      Pitch: 0.33039698004722595
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.063578128814697
+      Yaw: 1.3740071058273315
     Saved: ~
 Window Geometry:
   Displays:

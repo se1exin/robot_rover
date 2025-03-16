@@ -15,6 +15,9 @@ RUN apt-get update && apt-get install -y \
     # rm -rf /var/lib/apt/lists/*
 
 COPY . /app
+
+RUN git clone https://github.com/joshnewans/twist_stamper.git
+
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
     colcon build --symlink-install
 

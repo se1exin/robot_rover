@@ -43,7 +43,7 @@
             <origin xyz="0 -0.090 0" rpy="0 0 -${pi/2}" />
             <geometry>
                 <!-- <box size="0.356 0.195 0.074" /> -->
-                <mesh filename="file://$(find robot_description)/stl/robot_frame.stl" scale="0.001 0.001 0.001" />
+                <mesh filename="file://$(find robot_tank_desc)/stl/robot_frame.stl" scale="0.001 0.001 0.001" />
             </geometry>
             <material name="yellow" />
         </visual>
