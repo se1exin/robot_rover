@@ -5,7 +5,7 @@
     <joint name="camera_front_joint" type="fixed">
         <parent link="chassis" />
         <child link="camera_front_link" />
-        <origin xyz="0.178 0 0.025" rpy="0 0 0" />
+        <origin xyz="0.1305 0 0.025" rpy="0 0 0" />
     </joint>
 
     <link name="camera_front_link">
@@ -62,7 +62,7 @@
     <joint name="camera_back_joint" type="fixed">
         <parent link="chassis" />
         <child link="camera_back_link" />
-        <origin xyz="-0.178 0 0.025" rpy="0 0 ${-pi}" />
+        <origin xyz="-0.1305 0 0.025" rpy="0 0 ${-pi}" />
     </joint>
 
     <link name="camera_back_link">
