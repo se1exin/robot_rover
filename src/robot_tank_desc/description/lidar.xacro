@@ -4,7 +4,7 @@
     <joint name="laser_joint" type="fixed">
         <parent link="chassis" />
         <child link="laser_frame" />
-        <origin xyz="0 0 0.05" rpy="0 0 0" />
+        <origin xyz="0.10525 ${0.02375 * 2.5} 0.132" rpy="0 0 0" />
     </joint>
 
     <link name="laser_frame">
@@ -22,6 +22,21 @@
         <xacro:inertial_cylinder mass="0.01" length="0.015" radius="0.035">
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:inertial_cylinder>
+    </link>
+
+    <joint name="laser_rod_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="laser_rod" />
+        <origin xyz="0.10525 ${0.02375 * 2.5} 0.05" rpy="0 0 0" />
+    </joint>
+
+    <link name="laser_rod">
+        <visual>
+            <geometry>
+                <cylinder radius="0.011" length="0.14" />
+            </geometry>
+            <material name="red" />
+        </visual>
     </link>
 
     <gazebo reference="laser_frame">
