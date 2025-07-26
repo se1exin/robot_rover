@@ -60,10 +60,13 @@ Run `./scripts/rpi.docker-run.sh` to run the motor controller node.
 ## Pin Mappings
 The raspberry pi pin mappings are:
 
-Left Motor Step: 17
-Left Motor DIR:  27
+Left Motor Step: 27
+Left Motor DIR:  17
 Left Motor EN:   22
-Right Motor Step: 23
-Right Motor DIR:  24
-Right Motor EN:   25
+Right Motor Step: 6
+Right Motor DIR:  6
+Right Motor EN:   13
+
+Lidar TX: 15 (RPi UART0 RX)
+Lidar RX: 14 (RPi UART0 TX)
 

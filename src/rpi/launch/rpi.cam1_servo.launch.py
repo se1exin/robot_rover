@@ -9,7 +9,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {
-                "servo_gpio": 26,
+                "servo_gpio": 12,
                 "servo_topic": 'cam1_servo',
             },
         ]
