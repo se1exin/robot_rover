@@ -3,11 +3,9 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, Command
 from launch.actions import DeclareLaunchArgument
 from launch_ros.actions import Node
-
-import xacro
 
 
 def generate_launch_description():
@@ -18,11 +16,11 @@ def generate_launch_description():
     # Process the URDF file
     pkg_path = os.path.join(get_package_share_directory("robot_tank_desc"))
     xacro_file = os.path.join(pkg_path, "description", "robot.urdf.xacro")
-    robot_description_config = xacro.process_file(xacro_file)
+    robot_description_config = Command(['xacro ', xacro_file, ' sim_mode:=', use_sim_time])
 
     # Create a robot_state_publisher node
     params = {
-        "robot_description": robot_description_config.toxml(),
+        "robot_description": robot_description_config,
         "use_sim_time": use_sim_time,
     }
     node_robot_state_publisher = Node(

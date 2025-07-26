@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- FRONT CAMERA -->
+    <joint name="camera_front_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="camera_front_link" />
+        <origin xyz="0.1305 0 0.025" rpy="0 0 0" />
+    </joint>
+
+    <link name="camera_front_link">
+        <visual>
+            <origin xyz="-0.005 0 0"/>
+            <geometry>
+                <box size="0.010 0.025 0.025"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <visual>
+            <origin xyz="0.0025 0 0" rpy="0 -${pi/2} 0"/>
+            <geometry>
+                <cylinder radius="0.005" length="0.005"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+    </link>
+
+    <joint name="camera_front_optical_joint" type="fixed">
+        <parent link="camera_front_link"/>
+        <child link="camera_front_link_optical"/>
+        <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+
+    <link name="camera_front_link_optical"></link>
+
+    <gazebo reference="camera_front_link">
+        <material>Gazebo/Red</material>
+
+        <sensor name="camera_front" type="camera">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <camera>
+                <camera_info_topic>cam_1/camera_info</camera_info_topic>
+                <horizontal_fov>1.089</horizontal_fov>
+                <image>
+                    <format>R8G8B8</format>
+                    <width>640</width>
+                    <height>480</height>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>8.0</far>
+                </clip>
+            </camera>
+            <topic>cam_1/image_raw</topic>
+            <gz_frame_id>camera_front_link_optical</gz_frame_id>
+        </sensor>
+    </gazebo>
+
+    <!-- BACK CAMERA -->
+    <joint name="camera_back_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="camera_back_link" />
+        <origin xyz="-0.1305 0 0.025" rpy="0 0 ${-pi}" />
+    </joint>
+
+    <link name="camera_back_link">
+        <visual>
+            <origin xyz="-0.005 0 0"/>
+            <geometry>
+                <box size="0.010 0.025 0.025"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <visual>
+            <origin xyz="0.0025 0 0" rpy="0 -${pi/2} 0"/>
+            <geometry>
+                <cylinder radius="0.005" length="0.005"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+    </link>
+
+    <joint name="camera_back_optical_joint" type="fixed">
+        <parent link="camera_back_link"/>
+        <child link="camera_back_link_optical"/>
+        <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+
+    <link name="camera_back_link_optical"></link>
+
+    <gazebo reference="camera_back_link">
+        <material>Gazebo/Red</material>
+
+        <sensor name="camera_back" type="camera">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <camera>
+                <camera_info_topic>cam_2/camera_info</camera_info_topic>
+                <horizontal_fov>1.089</horizontal_fov>
+                <image>
+                    <format>R8G8B8</format>
+                    <width>640</width>
+                    <height>480</height>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>8.0</far>
+                </clip>
+            </camera>
+            <topic>cam_2/image_raw</topic>
+            <gz_frame_id>camera_back_link_optical</gz_frame_id>
+        </sensor>
+    </gazebo>    
+</robot>
