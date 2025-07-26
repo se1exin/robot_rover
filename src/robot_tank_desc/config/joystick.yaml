@@ -13,14 +13,14 @@ teleop_node:
     scale_linear:
       x: 1.0
     scale_linear_turbo:
-      x: 5.0
+      x: 2.0
 
     axis_angular:  # Left thumb stick horizontal
       yaw: 3
     scale_angular:
       yaw: 1.0
     scale_angular_turbo:
-      yaw: 5.0
+      yaw: 2.0
 
     require_enable_button: false
     enable_button: 4  # Left shoulder button

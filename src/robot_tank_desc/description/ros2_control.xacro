@@ -5,6 +5,10 @@
         <ros2_control name="RealRobot" type="system">
             <hardware>
                 <plugin>diffdrive_rpi/DiffDriveRPI_TODO</plugin>
+                <!-- <plugin>joint_state_topic_hardware_interface/JointStateTopicSystem</plugin> -->
+                <!-- <param name="joint_commands_topic">/topic_based_joint_commands</param>
+                <param name="joint_states_topic">/topic_based_joint_states</param>
+                <param name="sum_wrapped_joint_states">true</param> -->
             </hardware>
             <joint name="left_wheel_joint">
                 <command_interface name="velocity">

@@ -88,15 +88,21 @@ def generate_launch_description():
         )
     )
 
+    diffdrive_pubsub = Node(
+        package='diffdrive_pubsub',
+        executable='diffdrive_pubsub',
+    )
+
     # Run the node
     return LaunchDescription(
         [
             rsp,
             joy_node,
             teleop_node,
-            delayed_controller_manager,
+            # delayed_controller_manager,
             delayed_diff_drive_spawner,
             delayed_joint_broad_spawner,
-            twist_stamper
+            twist_stamper,
+            diffdrive_pubsub
         ]
     )

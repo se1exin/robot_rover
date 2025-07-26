@@ -2,6 +2,39 @@
 
 ## Server
 
+Clone `twist_stamper` to the root of this project:
+
+```
+git clone https://github.com/joshnewans/twist_stamper.git
+```
+
+### Simulation via Gazebo
+
+Launch Gazebo
+```
+ros2 launch robot_tank_desc gazebo.launch.py
+```
+
+Launch RViz
+```
+rviz2 -d src/robot_tank_desc/config/view_robot.rviz
+```
+
+
+### Physical Robot
+
+Launch Robot Server
+```
+ros2 launch robot_tank_desc robot.launch.py
+```
+
+Launch RViz
+```
+rviz2 -d src/robot_tank_desc/config/view_robot.rviz
+```
+
+
+### Docker
 Install docker
 
 Run `./scripts/server.docker-build.sh` to build the image.
@@ -10,20 +43,7 @@ Run `./scripts/server.docker-run.sh` to run the joystick controller node.
 
 Instructions for getting xbox one controller working over bluetooth. Note disabling ERTM was not required on Ubuntu 22.04: https://www.addictivetips.com/ubuntu-linux-tips/xbox-one-controllers-over-bluetooth-linux/
 
-
-Clone `twist_stamper` to the root of this project:
-
-```
-git clone https://github.com/joshnewans/twist_stamper.git
-```
-
 ## Raspberry Pi 5 - Ubuntu 24.04
-
-### Install librealsense
-
-```
-sudo apt update && sudo apt install ros-${ROS_DISTRO}-librealsense2* ros-${ROS_DISTRO}-realsense2-*
-```
 
 ### Install gpiod dependencies
 
