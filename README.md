@@ -44,6 +44,11 @@ ros2 launch slam_toolbox online_async_launch.py slam_params_file:=./src/robot_ta
 ros2 launch nav2_bringup navigation_launch.py use_sim_time:=true
 ```
 
+Launch RViz
+```
+rviz2 -d src/robot_tank_desc/config/robot_with_map.rviz
+```
+
 ### Docker
 Install docker
 
