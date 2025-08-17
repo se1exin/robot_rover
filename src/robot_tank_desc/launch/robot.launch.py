@@ -97,8 +97,8 @@ def generate_launch_description():
     return LaunchDescription(
         [
             rsp,
-            joy_node,
-            teleop_node,
+            # joy_node,
+            # teleop_node,
             # delayed_controller_manager,
             delayed_diff_drive_spawner,
             delayed_joint_broad_spawner,

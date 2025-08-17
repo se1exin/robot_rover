@@ -15,7 +15,7 @@ class DiffDrivePubSub(Node):
 
         # Parameters for the robot, such as wheel separation and radius
         self.declare_parameter('wheel_separation', 0.35)
-        self.declare_parameter('wheel_radius', 0.0412)
+        self.declare_parameter('wheel_radius', 0.038)
 
         self.wheel_separation = self.get_parameter('wheel_separation').value
         self.wheel_radius = self.get_parameter('wheel_radius').value
@@ -114,7 +114,7 @@ class DiffDrivePubSub(Node):
         return motor_a_speed, motor_b_speed
     
 
-    def map_to_delay(self, speed_factor, min_delay=50, max_delay=70):
+    def map_to_delay(self, speed_factor, min_delay=280, max_delay=300):
         """
         Maps a speed factor between -1.0 and 1.0 to a delay for a stepper motor.
         
