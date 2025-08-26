@@ -90,7 +90,8 @@
     <joint name="left_wheel_joint" type="continuous">
         <parent link="base_link" />
         <child link="left_wheel" />
-        <origin xyz="0 0.1225 0.0206" rpy="-${pi/2} 0 0" />
+        <!-- Note the wheel is offset on X to account for the center of gravity/turn radius being towards the back of the robot -->
+        <origin xyz="-0.05 0.1225 0.0206" rpy="-${pi/2} 0 0" />
         <axis xyz="0 0 1" />
     </joint>
 
@@ -115,7 +116,8 @@
     <joint name="right_wheel_joint" type="continuous">
         <parent link="base_link" />
         <child link="right_wheel" />
-        <origin xyz="0 -0.1225 0.0206" rpy="${pi/2} 0 0" />
+        <!-- Note the wheel is offset on X to account for the center of gravity/turn radius being towards the back of the robot -->
+        <origin xyz="-0.05 -0.1225 0.0206" rpy="${pi/2} 0 0" />
         <axis xyz="0 0 -1" />
     </joint>
     

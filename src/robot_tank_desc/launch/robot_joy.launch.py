@@ -1,7 +1,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, TimerAction
+from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command
 from launch.actions import RegisterEventHandler
@@ -60,8 +60,6 @@ def generate_launch_description():
                     controller_params_file]
     )
 
-    delayed_controller_manager = TimerAction(period=3.0, actions=[controller_manager])
-
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -97,9 +95,8 @@ def generate_launch_description():
     return LaunchDescription(
         [
             rsp,
-            # joy_node,
-            # teleop_node,
-            # delayed_controller_manager,
+            joy_node,
+            teleop_node,
             delayed_diff_drive_spawner,
             delayed_joint_broad_spawner,
             twist_stamper,

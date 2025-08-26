@@ -118,7 +118,13 @@ rviz2 -d src/robot_tank_desc/config/robot_with_map.rviz
 
 ros2 launch slam_toolbox online_async_launch.py slam_params_file:=./src/robot_tank_desc/config/mapper_params_online_async.yaml
 
-ros2 launch robot_tank_desc robot.launch.p
+ros2 launch robot_tank_desc robot_nav.launch.py
 
+# Default nav2 params
 ros2 launch nav2_bringup navigation_launch.py
+
+# OR custom params
+ros2 launch robot_tank_desc navigation_launch.py
+
+
 ```

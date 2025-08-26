@@ -114,7 +114,7 @@ class DiffDrivePubSub(Node):
         return motor_a_speed, motor_b_speed
     
 
-    def map_to_delay(self, speed_factor, min_delay=280, max_delay=300):
+    def map_to_delay(self, speed_factor, min_delay=80, max_delay=220):
         """
         Maps a speed factor between -1.0 and 1.0 to a delay for a stepper motor.
         
