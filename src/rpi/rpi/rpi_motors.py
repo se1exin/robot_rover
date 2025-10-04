@@ -5,6 +5,9 @@ import gpiod
 import threading
 import time
 
+# Encoder constants
+PULSES_PER_REV = 10
+DEGREES_PER_PULSE = 360.0 / PULSES_PER_REV
 
 class StepperMotorNode(Node):
     def __init__(self):
@@ -12,25 +15,26 @@ class StepperMotorNode(Node):
 
         # 17HS13-0404S-PG5 Stepper
         # https://www.omc-stepperonline.com/nema-17-stepper-motor-bipolar-l-33mm-w-gear-ratio-5-1-planetary-gearbox-17hs13-0404s-pg5
-        motor_base_deg_per_step = 1.8
-        motor_gear_ratio = 5.18
-        self.deg_per_step = motor_base_deg_per_step / motor_gear_ratio
 
         # Declare parameters for GPIO pins
         self.declare_parameter('left_motor_step_pin', 27)
         self.declare_parameter('left_motor_dir_pin', 17)
         self.declare_parameter('left_motor_enable_pin', 22)
+        self.declare_parameter('left_motor_encoder_pin', 23)
         self.declare_parameter('right_motor_step_pin', 6)
         self.declare_parameter('right_motor_dir_pin', 5)
         self.declare_parameter('right_motor_enable_pin', 13)
+        self.declare_parameter('right_motor_encoder_pin', 24)
 
         # Get GPIO pin configurations
         self.left_motor_step_pin = self.get_parameter('left_motor_step_pin').value
         self.left_motor_dir_pin = self.get_parameter('left_motor_dir_pin').value
         self.left_motor_enable_pin = self.get_parameter('left_motor_enable_pin').value
+        self.left_motor_encoder_pin = self.get_parameter('left_motor_encoder_pin').value
         self.right_motor_step_pin = self.get_parameter('right_motor_step_pin').value
         self.right_motor_dir_pin = self.get_parameter('right_motor_dir_pin').value
         self.right_motor_enable_pin = self.get_parameter('right_motor_enable_pin').value
+        self.right_motor_encoder_pin = self.get_parameter('right_motor_encoder_pin').value
 
         # Initialize gpiod chips and lines
         self.chip = gpiod.Chip('gpiochip0')  # Default GPIO chip
@@ -62,6 +66,11 @@ class StepperMotorNode(Node):
         # Initialize degree counters
         self.left_motor_degrees = 0.0
         self.right_motor_degrees = 0.0
+        self.left_pulse_count = 0
+        self.right_pulse_count = 0
+
+        # Lock for thread safety
+        self.lock = threading.Lock()
 
         # Initialize motor speeds
         self.left_speed = 0
@@ -73,11 +82,20 @@ class StepperMotorNode(Node):
         self.right_motor_thread = threading.Thread(target=self.run_motor, args=(
             self.right_motor_step_pin, self.right_motor_dir_pin, self.right_motor_enable_pin, lambda: self.right_speed, "Right Motor", False))
 
+        self.left_encoder_thread = threading.Thread(target=self.encoder_monitor, args=(self.left_motor_encoder_pin, "left"))
+        self.right_encoder_thread = threading.Thread(target=self.encoder_monitor, args=(self.right_motor_encoder_pin, "right"))
+
         self.left_motor_thread.daemon = True
         self.right_motor_thread.daemon = True
 
+        self.left_encoder_thread.daemon = True
+        self.right_encoder_thread.daemon = True
+
         self.left_motor_thread.start()
         self.right_motor_thread.start()
+
+        self.left_encoder_thread.start()
+        self.right_encoder_thread.start()
 
         # Timer to publish updates at a regular interval
         self.timer_period = 0.1  # seconds
@@ -121,26 +139,38 @@ class StepperMotorNode(Node):
                 self.lines[step_pin].set_value(0)
                 time.sleep(delay)  # Half the delay for LOW signal
 
-                # self.get_logger().info(f"{motor_name} stepped (delay = {delay:.4f}s).")
-
-                # Update degree count and publish
-                step_counter += 1
-
-            if step_counter >= self.deg_per_step:
-                degrees_moved = step_counter * self.deg_per_step
-                step_counter = 0
-                if is_left:
-                    self.left_motor_degrees += degrees_moved if direction == 1 else -degrees_moved
-                    self.left_motor_degrees = self.left_motor_degrees % 360
-                    
-                else:
-                    self.right_motor_degrees += degrees_moved if direction == 1 else -degrees_moved
-                    self.right_motor_degrees = self.right_motor_degrees % 360
-                    
 
     def update_angles(self):
         self.left_motor_angle_pub.publish(Float32(data=self.left_motor_degrees))
         self.right_motor_angle_pub.publish(Float32(data=self.right_motor_degrees))
+
+    def encoder_monitor(self, line_offset, name):
+
+        line = self.chip.get_line(line_offset)
+        line.request(consumer=f"{name}-encoder", type=gpiod.LINE_REQ_EV_FALLING_EDGE)
+
+        while True:
+            if line.event_wait(5):
+                event = line.event_read()
+                if event.type == gpiod.LineEvent.FALLING_EDGE:
+                    with self.lock:
+                        if name == "left":
+                            if self.left_speed >= 0:
+                                self.left_pulse_count += 1
+                            else:
+                                self.left_pulse_count -= 1
+                            degrees = self.left_pulse_count * DEGREES_PER_PULSE
+                            self.left_motor_degrees = degrees % 360
+
+                        elif name == "right":
+                            if self.right_speed >= 0:
+                                self.right_pulse_count += 1
+                            else:
+                                self.right_pulse_count -= 1
+                            degrees = self.right_pulse_count * DEGREES_PER_PULSE
+                            self.right_motor_degrees = degrees % 360
+            else:
+                self.get_logger().debug(f"[{name.upper()}] No pulse in 5 seconds...")
 
 
     def destroy_node(self):
