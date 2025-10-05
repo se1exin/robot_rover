@@ -94,7 +94,7 @@ def generate_launch_description():
     # Run the node
     return LaunchDescription(
         [
-            rsp,
+            # rsp,
             joy_node,
             teleop_node,
             delayed_diff_drive_spawner,
