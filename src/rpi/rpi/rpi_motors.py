@@ -20,11 +20,11 @@ class StepperMotorNode(Node):
         self.declare_parameter('left_motor_step_pin', 27)
         self.declare_parameter('left_motor_dir_pin', 17)
         self.declare_parameter('left_motor_enable_pin', 22)
-        self.declare_parameter('left_motor_encoder_pin', 23)
+        self.declare_parameter('left_motor_encoder_pin', 24)
         self.declare_parameter('right_motor_step_pin', 6)
         self.declare_parameter('right_motor_dir_pin', 5)
         self.declare_parameter('right_motor_enable_pin', 13)
-        self.declare_parameter('right_motor_encoder_pin', 24)
+        self.declare_parameter('right_motor_encoder_pin', 25)
 
         # Get GPIO pin configurations
         self.left_motor_step_pin = self.get_parameter('left_motor_step_pin').value
