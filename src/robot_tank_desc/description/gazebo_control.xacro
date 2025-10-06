@@ -7,12 +7,12 @@
             <!-- Wheel Information -->
             <left_joint>left_wheel_joint</left_joint>
             <right_joint>right_wheel_joint</right_joint>
-            <wheel_separation>0.245</wheel_separation>
-            <wheel_radius>0.0412</wheel_radius>
+            <wheel_separation>0.29</wheel_separation>
+            <wheel_radius>0.038</wheel_radius>
 
 
             <!-- Limits -->
-            <max_linear_acceleration>5.0</max_linear_acceleration>
+            <max_linear_acceleration>100.0</max_linear_acceleration>
 
             
             <!-- Input -->
