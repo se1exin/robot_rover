@@ -2,6 +2,7 @@ import serial
 import serial.tools.list_ports
 from serial import SerialException
 from math import pi
+import time
 
 # Constants
 FRAME_SIZE = 62  # Number of bytes in a valid row
@@ -25,12 +26,28 @@ class FM1828Driver:
     def __init__(
         self, port="/dev/serial0", baudrate=460800, timeout=1, data_callback=None
     ):
-        """Initialize the serial connection and set the callback."""
         try:
             self.ser = serial.Serial(port, baudrate, timeout=timeout)
             print(f"Connected to serial port: {port}")
-            self.ser.write(b"startlds$\n")
-            print("Sent initialization command: startlds$")
+
+            # Check for incoming data
+            print("Checking if LiDAR is already publishing data...")
+            data_detected = False
+
+            start_time = time.time()
+            while time.time() - start_time < 1.0:  # wait up to 1 second
+                if self.ser.in_waiting:
+                    data = self.ser.read(self.ser.in_waiting)
+                    if data:
+                        data_detected = True
+                        print("LiDAR is already publishing data.")
+                        break
+                time.sleep(0.05)
+
+            if not data_detected:
+                self.ser.write(b"startlds$\n")
+                print("Sent initialization command: startlds$")
+
         except SerialException as e:
             print(f"Error opening serial port: {e}")
             raise
