@@ -36,6 +36,7 @@ class DiffDrivePubSub(Node):
         self.create_subscription(Float32, 'right_motor_angle', self.right_angle_callback, 10)
 
         # State to track previous angle and time
+        self.last_cmd_time = 0
         self.left_last_angle = None
         self.left_last_time = None
         self.right_last_angle = None
@@ -77,6 +78,14 @@ class DiffDrivePubSub(Node):
         self.timer = self.create_timer(self.timer_period, self.update)
 
     def cmd_vel_callback(self, msg):
+        current_time = time.time()
+
+        # Throttle: only process if 1 second has passed
+        if current_time - self.last_cmd_time < 0.01:
+            return  # Skip processing
+
+        self.last_cmd_time = current_time  # Update last processed time
+        
         # Extract linear and angular velocities
         linear_vel = msg.linear.x
         angular_vel = msg.angular.z
@@ -96,25 +105,35 @@ class DiffDrivePubSub(Node):
 
         self.left_wheel_pub.publish(left_msg)
         self.right_wheel_pub.publish(right_msg)
-    
-    def map_cmd_vel_to_motor_speed_factors(self, x, y):
-        # Ensure x and y are within the expected range [-1.0, 1.0]
+
+    def map_cmd_vel_to_motor_speed_factors(self, x, y, turn_gain=0.25):
+        # Clamp inputs
         x = max(-1.0, min(1.0, x))
         y = max(-1.0, min(1.0, y))
-        
-        # Calculate motor speeds considering full stop and reverse at extreme Y values
-        motor_a_speed = (x * (1 - abs(y))) - y
-        motor_b_speed = (x * (1 - abs(y))) + y
-        
-        # Normalize the motor speeds to be within [-1.0, 1.0]
-        max_speed = max(abs(motor_a_speed), abs(motor_b_speed), 1.0)
-        motor_a_speed /= max_speed
-        motor_b_speed /= max_speed
+
+        # Apply gain to turning
+        y *= turn_gain
+
+        # To turn slow down the opposite motor
+        motor_a_speed = x
+        motor_b_speed = x
+
+        if x >= 0:
+            if y > 0:  # Positive y means turn left
+                motor_a_speed -= y
+            else:
+                motor_b_speed -= y
+        else:
+            # Reverse, we technically speed up the other wheel back into the positive direction
+            if y > 0:  # Positive y means turn left
+                motor_b_speed += y
+            else:
+                motor_a_speed += y
 
         return motor_a_speed, motor_b_speed
     
 
-    def map_to_delay(self, speed_factor, min_delay=80, max_delay=220):
+    def map_to_delay(self, speed_factor, min_delay=80, max_delay=210):
         """
         Maps a speed factor between -1.0 and 1.0 to a delay for a stepper motor.
         
@@ -183,8 +202,8 @@ class DiffDrivePubSub(Node):
         wheel_v_right = motor_v_right
 
         # Convert angular velocity to linear velocity
-        v_left = wheel_v_left * self.wheel_radius * 0.98  # 0.9 accounts for slippage
-        v_right = wheel_v_right * self.wheel_radius * 0.98  # 0.9 accounts for slippage
+        v_left = wheel_v_left * self.wheel_radius
+        v_right = wheel_v_right * self.wheel_radius
 
         v = (v_right + v_left) / 2.0
         omega = ((v_right - v_left) / self.wheel_separation)
