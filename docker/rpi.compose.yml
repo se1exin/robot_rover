@@ -84,40 +84,6 @@ services:
     restart: unless-stopped
     command: ros2 launch robot_tank_desc robot_nav.launch.py
   
-  slam_toolbox:
-    container_name: robot-tank-slam-toolbox
-    image: robot-tank-rpi
-    privileged: true
-    network_mode: "host"
-    environment:
-      - ROS_STATIC_PEERS=10.1.1.6
-    devices:
-      - /dev/serial0
-    volumes:
-      - /home/selexin/robot_rover/src:/app/src
-      - /sys/class/gpio:/sys/class/gpio
-      - /dev:/dev
-      - /run/udev/:/run/udev/
-    restart: unless-stopped
-    command: ros2 launch slam_toolbox online_async_launch.py slam_params_file:=./src/robot_tank_desc/config/mapper_params_online_async.yaml
-
-  nav2:
-    container_name: robot-tank-nav2
-    image: robot-tank-rpi
-    privileged: true
-    network_mode: "host"
-    environment:
-      - ROS_STATIC_PEERS=10.1.1.6
-    devices:
-      - /dev/serial0
-    volumes:
-      - /home/selexin/robot_rover/src:/app/src
-      - /sys/class/gpio:/sys/class/gpio
-      - /dev:/dev
-      - /run/udev/:/run/udev/
-    restart: unless-stopped
-    command: ros2 launch robot_tank_desc navigation_launch.py
-
   # cam1:
   #   container_name: robot-tank-rpi-cam-1
   #   image: robot-tank-rpi

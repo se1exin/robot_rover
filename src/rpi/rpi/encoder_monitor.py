@@ -2,16 +2,19 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
 
+import time
 import gpiod
 import threading
 
 # Constants
-PULSES_PER_REV = 15
+PULSES_PER_REV = 10
 DEGREES_PER_PULSE = 360.0 / PULSES_PER_REV
 
 class EncoderMonitorNode(Node):
     def __init__(self):
         super().__init__('encoder_monitor_node')
+        self.last_pulse_time = 0
+        self.min_pulse_interval = 0.005  # 5 ms debounce (adjust as needed)
 
         # Declare parameters
         self.declare_parameter('encoder_pin', 24)
@@ -26,7 +29,7 @@ class EncoderMonitorNode(Node):
         # GPIO setup
         self.chip = gpiod.Chip('gpiochip0')
         self.line = self.chip.get_line(self.encoder_pin)
-        self.line.request(consumer="encoder-monitor", type=gpiod.LINE_REQ_EV_RISING_EDGE)
+        self.line.request(consumer="encoder-monitor", type=gpiod.LINE_REQ_EV_BOTH_EDGES)
 
         self.get_logger().info(f"Encoder monitor started on GPIO {self.encoder_pin}, listening to '{self.delay_topic}'")
 
@@ -56,11 +59,18 @@ class EncoderMonitorNode(Node):
         while rclpy.ok():
             if self.line.event_wait(5):
                 event = self.line.event_read()
-                if event.type == gpiod.LineEvent.RISING_EDGE:
-                    self.pulse_count += self.direction
-                    self.degrees = (self.pulse_count * DEGREES_PER_PULSE) % 360
+                now = time.time()
+
+                if (now - self.last_pulse_time) >= self.min_pulse_interval:
+                    if event.type == gpiod.LineEvent.FALLING_EDGE:
+                        self.pulse_count += self.direction
+                        self.degrees = (self.pulse_count * DEGREES_PER_PULSE) % 360
+                        self.last_pulse_time = now
+                else:
+                    self.get_logger().debug("Debounced extra pulse.")
             else:
-                self.get_logger().warn(f"No encoder pulses on GPIO {self.encoder_pin} in 5 seconds.")
+                # self.get_logger().warn(f"No encoder pulses on GPIO {self.encoder_pin} in 5 seconds.")
+                pass
 
     def publish_angle(self):
         msg = Float32()

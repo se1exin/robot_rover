@@ -16,6 +16,7 @@ slam_toolbox:
     scan_topic: /scan
     use_map_saver: true
     mode: mapping #localization
+    # mode: localization
 
     # if you'd like to immediately start continuing a map at a given pose
     # or at the dock, but they are mutually exclusive, if pose is given
@@ -28,7 +29,7 @@ slam_toolbox:
     throttle_scans: 3
     transform_publish_period: 0.01 #if 0 never publishes odometry
     map_update_interval: 0.01
-    resolution: 0.1
+    resolution: 0.03
     max_laser_range: 10.0 #for rastering images
     minimum_time_interval: 0.1
     transform_timeout: 0.1
